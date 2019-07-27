@@ -28,32 +28,8 @@ function block_restrict_content_register_asset() {
 	$all_roles = array_values($wp_roles->get_names());
 
 	register_block_type( 'block-restrict-content/block-restrict-content', array(
-		'editor_script' => 'block_restrict_content',
-		'render_callback' =>  'block_restrict_content_render',
-		'attributes' => [
-			'rolesSelected' => [
-				'type' => 'array',
-				'default' => [ $all_roles[0] ]
-			],
-			'roles'  => [
-				'type'  => 'array',
-				'default' => $all_roles
-			]
-		]
+		'editor_script' => 'block_restrict_content'
 	 ) );
 }
 
 add_action( 'init', 'block_restrict_content_register_asset' );
-
-
-function block_restrict_content_render($settings, $content) {
-
-	$user = wp_get_current_user();
-	$rolesAllowed = array_map('strtolower', $settings['rolesSelected']);
-
-	if( !empty($user) && in_array( $user->roles[0], $rolesAllowed)) {
-		return $content;
-	} else {
-		return '<div style="background-color: #ddd; text-align: center; padding: 20px;">You need permissions</div>' ;
-	}
-}
