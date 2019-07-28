@@ -14,12 +14,12 @@
 
 defined('ABSPATH') || exit;
 
-function block_restrict_content_register_asset() {
+function block_restrict_content_register_block() {
 
 	wp_register_script(
 		'block_restrict_content',
 		plugins_url( 'build/index.js', __FILE__ ),
-		array( 'wp-blocks', 'wp-element', 'wp-editor' ),
+		array( 'wp-blocks', 'wp-element', 'wp-editor', 'wp-components' ),
 		filemtime( plugin_dir_path( __FILE__ ) . 'build/index.js' )
 	);
 
@@ -43,13 +43,12 @@ function block_restrict_content_register_asset() {
 	 ) );
 }
 
-add_action( 'init', 'block_restrict_content_register_asset' );
+add_action( 'init', 'block_restrict_content_register_block' );
 
-
-function block_restrict_content_render($settings, $content) {
+function block_restrict_content_render($attributes, $content) {
 
 	$user = wp_get_current_user();
-	$rolesAllowed = array_map('strtolower', $settings['rolesSelected']);
+	$rolesAllowed = array_map('strtolower', $attributes['rolesSelected']);
 
 	if( !empty($user) && in_array( $user->roles[0], $rolesAllowed)) {
 		return $content;
